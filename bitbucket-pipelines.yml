@@ -1,33 +1,30 @@
+commonStep: &generate_sdks_and_pull_request
+  name: Generate SDKs and Pull Request
+  image: node:20
+  caches:
+    - node
+  script:
+    - |
+      if [ -z "$LIBLAB_TOKEN" ] || [ -z "$LIBLAB_GITLAB_TOKEN" ]; then
+        echo "Error: Variables LIBLAB_TOKEN and LIBLAB_GITLAB_TOKEN are required, see https://developers.liblab.com/tutorials/integrate-with-gitlab-actions/#create-tokens"
+        exit 1
+    - npm install -g liblab
+    - liblab build --yes --pr -p bitbucket
+  condition:
+    changes:
+      - "liblab.config.json"
+      - "spec/*"
+      - "hooks/**"
+      - "customPlanModifiers/**"
+
 pipelines:
   branches:
     main:
-      - step: generate_sdks_and_pull_request
+      - step: *generate_sdks_and_pull_request
 
   pull-requests:
     '**':
-      - step: generate_sdks_and_pull_request
-
-definitions:
-  steps:
-    - step: 
-        name: generate_sdks_and_pull_request
-        image: node:20
-        caches:
-          - node
-        script:
-          - |
-            if [ -z "$LIBLAB_TOKEN" ] || [ -z "$LIBLAB_GITLAB_TOKEN" ]; then
-              echo "Error: Variables LIBLAB_TOKEN and LIBLAB_GITLAB_TOKEN are required, see https://developers.liblab.com/tutorials/integrate-with-gitlab-actions/#create-tokens"
-              exit 1
-            fi
-          - npm install -g liblab
-          - liblab build --yes --pr -p bitbucket
-        condition:
-          changes:
-            - "liblab.config.json"
-            - "spec/*"
-            - "hooks/**"
-            - "customPlanModifiers/**"
+      - step: *generate_sdks_and_pull_request
 
 definitions:
   caches:
