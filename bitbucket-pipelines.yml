@@ -1,35 +1,32 @@
 pipelines:
   branches:
     main:
-      - step:
-          name: Generate SDKs and Pull Request
-          image: node:20
-          caches:
-            - node
-          script:
-            - |
-              if [ -z "$LIBLAB_TOKEN" ] || [ -z "$LIBLAB_BITBUCKET_TOKEN" ]; then
-                echo "Error: Variables LIBLAB_TOKEN and LIBLAB_BITBUCKET_TOKEN are required, see https://developers.liblab.com/tutorials/integrate-with-bitbucket-actions/#create-tokens"
-                exit 1
-              fi
-            - npm install -g liblab
-            - liblab build --yes --pr -p bitbucket
+      - step: *generate_sdks_and_pull_request
   pull-requests:
     '**':
-      - step:
-          name: Generate SDKs and Pull Request
-          image: node:20
-          caches:
-            - node
-          script:
-            - |
-              if [ -z "$LIBLAB_TOKEN" ] || [ -z "$LIBLAB_BITBUCKET_TOKEN" ]; then
-                echo "Error: Variables LIBLAB_TOKEN and LIBLAB_BITBUCKET_TOKEN are required, see https://developers.liblab.com/tutorials/integrate-with-bitbucket-actions/#create-tokens"
-                exit 1
-              fi
-            - npm install -g liblab
-            - liblab build --yes --pr -p bitbucket
+      - step: *generate_sdks_and_pull_request
 
 definitions:
+  steps:
+    - step: &generate_sdks_and_pull_request
+        name: Generate SDKs and Pull Request
+        image: node:20
+        caches:
+          - node
+        script:
+          - |
+            if [ -z "$LIBLAB_TOKEN" ] || [ -z "$LIBLAB_GITLAB_TOKEN" ]; then
+              echo "Error: Variables LIBLAB_TOKEN and LIBLAB_GITLAB_TOKEN are required, see https://developers.liblab.com/tutorials/integrate-with-gitlab-actions/#create-tokens"
+              exit 1
+            fi
+          - npm install -g liblab
+          - liblab build --yes --pr -p bitbucket
+        condition:
+          changes:
+            - "liblab.config.json"
+            - "spec/*"
+            - "hooks/**"
+            - "customPlanModifiers/**"
+            
   caches:
     node: ~/.npm
