@@ -2,6 +2,7 @@ pipelines:
   branches:
     main:
       - step: *generate_sdks_and_pull_request
+
   pull-requests:
     '**':
       - step: *generate_sdks_and_pull_request
@@ -27,6 +28,6 @@ definitions:
             - "spec/*"
             - "hooks/**"
             - "customPlanModifiers/**"
-            
+
   caches:
     node: ~/.npm
