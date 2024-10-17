@@ -8,8 +8,8 @@ pipelines:
             - node
           script:
             - |
-              if [ -z "$LIBLAB_TOKEN" ] || [ -z "$LIBLAB_GITLAB_TOKEN" ]; then
-                echo "Error: Variables LIBLAB_TOKEN and LIBLAB_GITLAB_TOKEN are required, see https://developers.liblab.com/tutorials/integrate-with-gitlab-actions/#create-tokens"
+              if [ -z "$LIBLAB_TOKEN" ] || [ -z "$LIBLAB_BITBUCKET_TOKEN" ]; then
+                echo "Error: Variables LIBLAB_TOKEN and LIBLAB_BITBUCKET_TOKEN are required, see https://developers.liblab.com/tutorials/integrate-with-bitbucket-actions/#create-tokens"
                 exit 1
               fi
             - npm install -g liblab
@@ -23,8 +23,8 @@ pipelines:
             - node
           script:
             - |
-              if [ -z "$LIBLAB_TOKEN" ] || [ -z "$LIBLAB_GITLAB_TOKEN" ]; then
-                echo "Error: Variables LIBLAB_TOKEN and LIBLAB_GITLAB_TOKEN are required, see https://developers.liblab.com/tutorials/integrate-with-gitlab-actions/#create-tokens"
+              if [ -z "$LIBLAB_TOKEN" ] || [ -z "$LIBLAB_BITBUCKET_TOKEN" ]; then
+                echo "Error: Variables LIBLAB_TOKEN and LIBLAB_BITBUCKET_TOKEN are required, see https://developers.liblab.com/tutorials/integrate-with-bitbucket-actions/#create-tokens"
                 exit 1
               fi
             - npm install -g liblab
