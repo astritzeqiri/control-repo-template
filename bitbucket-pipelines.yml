@@ -6,12 +6,12 @@ definitions:
         caches:
           - node
         script:
-          # - |
-          #   # Check for changes in the specified files or directories
-          #   if git diff --quiet HEAD~1 -- liblab.config.json spec/ hooks/ customPlanModifiers/; then
-          #     echo "No changes detected in relevant files. Skipping step."
-          #     exit 0
-          #   fi
+          - |
+            # Check for changes in the specified files or directories
+            if git diff --quiet HEAD~1 -- liblab.config.json spec/ hooks/ customPlanModifiers/; then
+              echo "No changes detected in relevant files. Skipping step."
+              exit 0
+            fi
           - |
             if [ -z "$LIBLAB_TOKEN" ] || [ -z "$LIBLAB_BITBUCKET_TOKEN" ]; then
               echo "Error: Variables LIBLAB_TOKEN and LIBLAB_BITBUCKET_TOKEN are required, see https://developers.liblab.com/tutorials/integrate-with-BITBUCKET-actions/#create-tokens"
