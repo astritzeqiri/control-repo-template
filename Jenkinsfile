@@ -1,5 +1,9 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'node:20'
+        }
+    }
     environment {
         LIBLAB_TOKEN = credentials('LIBLAB_TOKEN')
         LIBLAB_BITBUCKET_TOKEN = credentials('LIBLAB_BITBUCKET_TOKEN')
