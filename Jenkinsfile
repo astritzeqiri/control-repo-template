@@ -59,7 +59,7 @@ pipeline {
         stage('Build SDKs and Create Pull Request') {
             steps {
                 script {
-                    sh 'liblab build --yes --pr -p bitbucket'
+                    sh 'liblab build --yes --pr -p github'
                 }
             }
         }
