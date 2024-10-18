@@ -1,9 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:20'
-        }
-    }
+    agent any
     environment {
         LIBLAB_TOKEN = credentials('LIBLAB_TOKEN')
         LIBLAB_BITBUCKET_TOKEN = credentials('LIBLAB_BITBUCKET_TOKEN')
@@ -13,6 +9,19 @@ pipeline {
             steps {
                 // Ensure the repository is checked out
                 checkout scm
+            }
+        }
+        stage('Install Node.js and npm') {
+            steps {
+                script {
+                    // Download and install Node.js and npm
+                    sh '''
+                    curl -sL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+                    sudo apt-get install -y nodejs
+                    node -v
+                    npm -v
+                    '''
+                }
             }
         }
         stage('Pre-check for Environment Variables') {
@@ -25,18 +34,18 @@ pipeline {
                 }
             }
         }
-        // stage('Check for File Changes') {
-        //     steps {
-        //         script {
-        //             def changes = sh(script: 'git diff --quiet HEAD~1 -- liblab.config.json spec/ hooks/ customPlanModifiers/ || echo "CHANGES"', returnStdout: true).trim()
-        //             if (changes != "CHANGES") {
-        //                 echo "No changes detected in relevant files. Skipping pipeline."
-        //                 currentBuild.result = 'SUCCESS'
-        //                 error("Stopping pipeline as no relevant files were changed")
-        //             }
-        //         }
-        //     }
-        // }
+        stage('Check for File Changes') {
+            steps {
+                script {
+                    def changes = sh(script: 'git diff --quiet HEAD~1 -- liblab.config.json spec/ hooks/ customPlanModifiers/ || echo "CHANGES"', returnStdout: true).trim()
+                    if (changes != "CHANGES") {
+                        echo "No changes detected in relevant files. Skipping pipeline."
+                        currentBuild.result = 'SUCCESS'
+                        error("Stopping pipeline as no relevant files were changed")
+                    }
+                }
+            }
+        }
         stage('Install Dependencies') {
             steps {
                 script {
