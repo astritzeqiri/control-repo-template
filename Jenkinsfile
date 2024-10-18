@@ -16,7 +16,7 @@ pipeline {
                 script {
                     // Download and install Node.js and npm
                     sh '''
-                    curl -sL https://deb.nodesource.com/setup_20.x | -E bash -
+                    curl -sL https://deb.nodesource.com/setup_20.x | bash -
                     apt-get install -y nodejs
                     node -v
                     npm -v
