@@ -58,7 +58,7 @@ pipeline {
         stage('Build SDKs and Create Pull Request') {
             steps {
                 script {
-                    sh "liblab build --yes --pr -p ${env.REPO_HOST_PLATFORM}"
+                    sh('liblab build --yes --pr -p $REPO_HOST_PLATFORM')
                 }
             }
         }
