@@ -9,10 +9,10 @@
   "createDocs": false,
   "languageOptions": {
     "typescript": {
-      "npmName": "typescript-sdk-template-test-povio-sdk",
-      "npmOrg": "",
-      "githubRepoName": "typescript-sdk-template-test-povio",
-      "sdkVersion": "1.0.0"
+      "npmName": "typescript-sdk-template-test-povio",
+      "npmOrg": "astritpovio",
+      "githubRepoName": "typescript-sdk-template",
+      "sdkVersion": "1.0.1"
     }
   },
   "publishing": {
