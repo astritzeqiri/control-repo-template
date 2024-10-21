@@ -3,6 +3,7 @@ pipeline {
     environment {
         LIBLAB_TOKEN = credentials('LIBLAB_TOKEN')
         LIBLAB_BITBUCKET_TOKEN = credentials('LIBLAB_BITBUCKET_TOKEN')
+        REPO_HOST_PLATFORM = credentials('REPO_HOST_PLATFORM')
     }
     stages {
         stage('Checkout Repository') {
@@ -30,28 +31,28 @@ pipeline {
                     if (!env.LIBLAB_TOKEN || !env.LIBLAB_BITBUCKET_TOKEN) {
                         error("Error: LIBLAB_TOKEN or LIBLAB_BITBUCKET_TOKEN is not defined")
                     }
+                    if (!env.REPO_HOST_PLATFORM) {
+                        error("Error: REPO_HOST_PLATFORM is not defined")
+                    }
                     echo "Environment variables are defined."
                 }
             }
         }
-        // stage('Check for File Changes') {
-        //     steps {
-        //         script {
-        //             def changes = sh(script: 'git diff --quiet HEAD~1 -- liblab.config.json spec/ hooks/ customPlanModifiers/ || echo "CHANGES"', returnStdout: true).trim()
-        //             if (changes != "CHANGES") {
-        //                 echo "No changes detected in relevant files. Skipping pipeline."
-        //                 currentBuild.result = 'SUCCESS'
-        //                 error("Stopping pipeline as no relevant files were changed")
-        //             }
-        //         }
-        //     }
-        // }
+        stage('Check for File Changes') {
+            steps {
+                script {
+                    def changes = sh(script: 'git diff --quiet HEAD~1 -- liblab.config.json spec/ hooks/ customPlanModifiers/ || echo "CHANGES"', returnStdout: true).trim()
+                    if (changes != "CHANGES") {
+                        echo "No changes detected in relevant files. Skipping pipeline."
+                        currentBuild.result = 'SUCCESS'
+                        error("Stopping pipeline as no relevant files were changed")
+                    }
+                }
+            }
+        }
         stage('Install Dependencies') {
             steps {
                 script {
-                    if (!env.LIBLAB_TOKEN || !env.LIBLAB_BITBUCKET_TOKEN) {
-                        error("Error: Variables LIBLAB_TOKEN and LIBLAB_BITBUCKET_TOKEN are required. Please ensure they are set.")
-                    }
                     sh 'npm install -g liblab'
                 }
             }
@@ -59,7 +60,7 @@ pipeline {
         stage('Build SDKs and Create Pull Request') {
             steps {
                 script {
-                    sh 'liblab build --yes --pr -p github'
+                    sh "liblab build --yes --pr -p ${env.REPO_HOST_PLATFORM}"
                 }
             }
         }
