@@ -6,7 +6,6 @@
   "languages": [
     "typescript"
   ],
-  "createDocs": false,
   "languageOptions": {
     "typescript": {
       "npmName": "typescript-sdk-template-test-povio",
