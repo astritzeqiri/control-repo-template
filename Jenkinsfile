@@ -8,21 +8,7 @@ pipeline {
     stages {
         stage('Checkout Repository') {
             steps {
-                // Ensure the repository is checked out
                 checkout scm
-            }
-        }
-        stage('Install Node.js and npm') {
-            steps {
-                script {
-                    // Download and install Node.js and npm
-                    sh '''
-                    curl -sL https://deb.nodesource.com/setup_20.x | bash -
-                    apt-get install -y nodejs
-                    node -v
-                    npm -v
-                    '''
-                }
             }
         }
         stage('Pre-check for Environment Variables') {
@@ -35,6 +21,18 @@ pipeline {
                         error("Error: REPO_HOST_PLATFORM is not defined")
                     }
                     echo "Environment variables are defined."
+                }
+            }
+        }
+        stage('Install Node.js and npm') {
+            steps {
+                script {
+                    sh '''
+                    curl -sL https://deb.nodesource.com/setup_20.x | bash -
+                    apt-get install -y nodejs
+                    node -v
+                    npm -v
+                    '''
                 }
             }
         }
@@ -67,7 +65,6 @@ pipeline {
     }
     post {
         always {
-            // Clean up workspace after the pipeline is finished
             cleanWs()
         }
     }
